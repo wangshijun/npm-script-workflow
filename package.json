@@ -1,0 +1,91 @@
+{
+  "name": "hello-npm-script",
+  "version": "0.2.1",
+  "description": "",
+  "main": "index.js",
+  "config": {
+    "port": 3000
+  },
+  "lint-staged": {
+    "*.js": "eslint",
+    "*.less": "stylelint",
+    "*.css": "stylelint",
+    "*.json": "jsonlint --quiet",
+    "*.md": "markdownlint --config .markdownlint.json"
+  },
+  "scripts": {
+    "precommit": "lint-staged",
+    "prepush": "npm run test",
+    "lint:js": "eslint src/**/*.js",
+    "lint:js:fix": "npm run lint:js -- --fix",
+    "lint:css": "stylelint src/**/*.less",
+    "lint:json": "jsonlint --quiet *.json",
+    "lint:markdown": "markdownlint --config .markdownlint.json *.md",
+    "lint": "npm-run-all --parallel lint:*",
+    "pretest": "npm run lint",
+    "test": "cross-env NODE_ENV=test mocha tests/",
+    "coverage": "nyc report npm run test",
+    "build:images": "scripty",
+    "build:scripts": "scripty",
+    "build:styles": "scripty",
+    "build:hash": "scripty",
+    "build": "scripty",
+    "prebuild": "rm -rf dist/* && mkdir -p dist/{images,styles,scripts}",
+    "start": "npm-run-all --parallel start:*",
+    "start:reload-server": "livereload dist/ -w 5000 -d",
+    "start:static-server": "http-server dist/",
+    "watch:build": "NODE_ENV=development onchange -i \"src/**/*.*\" -- npm run build",
+    "dev": "npm run watch:build",
+    "predeploy": "yarn && NODE_ENV=production npm run build",
+    "deploy": "pm2 restart pm2.json",
+    "release:patch": "npm version patch && git push && git push --tags",
+    "release:minor": "npm version minor && git push && git push --tags",
+    "release:major": "npm version major && git push && git push --tags"
+  },
+  "keywords": [],
+  "author": "wangshijun <wangshijun2010@gmail.com> (http://github.com/wangshijun)",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chalk": "^2.3.0",
+    "chalk-cli": "^4.0.0",
+    "cpr": "^3.0.1",
+    "cross-env": "^5.1.1",
+    "cross-var": "^1.1.0",
+    "cssmin": "^0.4.3",
+    "eslint": "^4.11.0",
+    "hashmark": "^5.0.0",
+    "http-server": "^0.10.0",
+    "husky": "^0.14.3",
+    "imagemin-cli": "^3.0.0",
+    "jsonlint": "^1.6.2",
+    "less": "^2.7.3",
+    "lint-staged": "^6.0.0",
+    "livereload": "^0.6.3",
+    "make-dir-cli": "^1.0.0",
+    "markdownlint-cli": "^0.5.0",
+    "mocha": "^4.0.1",
+    "npm-run-all": "^4.1.2",
+    "nyc": "^11.3.0",
+    "onchange": "^3.3.0",
+    "opn-cli": "^3.1.0",
+    "pm2": "^2.9.1",
+    "replaceinfiles": "^1.1.4",
+    "rimraf": "^2.6.2",
+    "scripty": "^1.7.2",
+    "shelljs": "^0.7.8",
+    "stylelint": "^8.2.0",
+    "stylelint-config-standard": "^17.0.0",
+    "uglify-es": "^3.2.2"
+  },
+  "nyc": {
+    "exclude": [
+      "**/*.spec.js",
+      ".*.js"
+    ]
+  },
+  "dependencies": {
+    "express": "^4.16.2",
+    "morgan": "^1.9.0"
+  }
+}
